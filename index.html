@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>String War Studio - Viral Shorts Video Generator</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Space+Grotesk:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- SIDEBAR CONTROLS -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-badge">🧵 SHORTS STUDIO</div>
+        <h1>String War Studio</h1>
+        <p class="subtitle">Create viral Tug-of-War Battle Royale videos for YouTube Shorts & TikTok</p>
+      </div>
+
+      <!-- Control Tabs / Sections -->
+      <div class="sidebar-content">
+        <!-- PRESETS -->
+        <div class="card-section">
+          <div class="section-title">
+            <span class="icon">⚡</span>
+            <span>Quick Presets</span>
+          </div>
+          <select id="selectPreset" class="custom-select">
+            <option value="world_leaders">World Leaders (Original YouTube Short)</option>
+            <option value="tech_titans">Tech Billionaires (Elon, Zuck, Bezos...)</option>
+            <option value="anime_legends">Anime Legends (Goku, Naruto, Luffy...)</option>
+            <option value="animals">Beast Battle (Lion, Tiger, Bear...)</option>
+          </select>
+        </div>
+
+        <!-- CONTESTANTS SECTION -->
+        <div class="card-section">
+          <div class="section-title-row">
+            <div class="section-title">
+              <span class="icon">👥</span>
+              <span>Contestants (<span id="statAliveCount">8 / 8</span>)</span>
+            </div>
+            <button id="btnAddContestant" class="btn-sm btn-accent">+ Add Player</button>
+          </div>
+          <p class="hint-text">Click the 📷 on any avatar to upload your own picture!</p>
+          <div id="contestantList" class="contestant-list"></div>
+        </div>
+
+        <!-- AUDIO & SOUNDS -->
+        <div class="card-section">
+          <div class="section-title">
+            <span class="icon">🎵</span>
+            <span>Sounds & Music</span>
+          </div>
+
+          <div class="input-group">
+            <label>Background Music (BGM)</label>
+            <div class="file-upload-box">
+              <input type="file" id="inputCustomBgm" accept="audio/*" style="display:none">
+              <button class="btn-secondary btn-full" onclick="document.getElementById('inputCustomBgm').click()">
+                📂 Upload MP3 / WAV Music
+              </button>
+              <div id="bgmStatus" class="file-status">Default: Built-in Procedural Synth Beat</div>
+            </div>
+          </div>
+
+          <div class="slider-row">
+            <label>BGM Volume</label>
+            <input type="range" id="sliderBgmVol" min="0" max="1" step="0.05" value="0.35">
+          </div>
+
+          <div class="slider-row">
+            <label>Sound Effects (Plucks, Clashes, Booms)</label>
+            <input type="range" id="sliderSfxVol" min="0" max="1" step="0.05" value="0.8">
+          </div>
+        </div>
+
+        <!-- TITLES & RULES -->
+        <div class="card-section">
+          <div class="section-title">
+            <span class="icon">⚙️</span>
+            <span>Video & Battle Settings</span>
+          </div>
+
+          <div class="input-group">
+            <label>Top Main Title</label>
+            <input type="text" id="inputTitle" value="WHO WILL WIN?" class="text-input">
+          </div>
+
+          <div class="input-group">
+            <label>Subtitle / Call to Action</label>
+            <input type="text" id="inputSubtitle" value="COMMENT YOUR LEADER" class="text-input">
+          </div>
+
+          <div class="grid-2">
+            <div class="input-group">
+              <label>Initial Strings</label>
+              <input type="number" id="inputStrings" value="40" min="5" max="250" class="text-input">
+            </div>
+            <div class="input-group">
+              <label>String Cut Mode</label>
+              <select id="selectCutMode" class="custom-select">
+                <option value="steal">Steal Sliced Strings (Shorts Style)</option>
+                <option value="destroy">Sever & Destroy Sliced Strings</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="slider-row">
+            <label>Slingshot Tension & Pull</label>
+            <input type="range" id="inputTension" min="0.6" max="2.4" step="0.1" value="1.35">
+          </div>
+
+          <div class="slider-row">
+            <label>Physics & Battle Speed</label>
+            <input type="range" id="inputSpeed" min="0.5" max="2.5" step="0.1" value="1.0">
+          </div>
+        </div>
+
+        <!-- TEMPLATE JSON IMPORT/EXPORT -->
+        <div class="card-section">
+          <div class="section-title">
+            <span class="icon">💾</span>
+            <span>Save & Share Templates</span>
+          </div>
+          <div class="btn-row">
+            <button id="btnExportJson" class="btn-secondary">Export JSON</button>
+            <button id="btnImportJson" class="btn-secondary">Import JSON</button>
+            <input type="file" id="inputImportJson" accept=".json" style="display:none">
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN PREVIEW & RECORDING WORKSPACE -->
+    <main class="preview-area">
+      <!-- TOP ACTION BAR -->
+      <div class="action-bar">
+        <div class="status-wrap">
+          <span id="statusBadge" class="status-badge">Ready</span>
+        </div>
+
+        <div class="controls-wrap">
+          <button id="btnPlay" class="btn-primary">▶ Start Match</button>
+          <button id="btnReset" class="btn-secondary">↺ Reset</button>
+          <button id="btnRecord" class="btn-danger">⏺ Record & Export Video</button>
+        </div>
+      </div>
+
+      <!-- 9:16 VERTICAL PHONE PREVIEW CONTAINER -->
+      <div class="viewport-stage">
+        <div class="phone-mockup">
+          <div class="canvas-wrapper">
+            <canvas id="gameCanvas"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-footer-tips">
+        <span>💡 <strong>Tip:</strong> Hit <strong>"Record & Export Video"</strong> to capture the complete simulation at 1080x1920 60FPS with high quality audio, ready to upload directly to YouTube Shorts, TikTok & Reels!</span>
+      </div>
+    </main>
+  </div>
+
+  <script src="presets.js"></script>
+  <script src="audio-synth.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
